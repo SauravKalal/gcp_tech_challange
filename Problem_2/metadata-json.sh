@@ -1,3 +1,4 @@
+#!/bin/bash
 curl "http://metadata.google.internal/computeMetadata/v1/instance/" -H "Metadata-Flavor: Google"
 sleep 5
 curl "http://metadata.google.internal/computeMetadata/v1/instance//network-interfaces/0/" -H "Metadata-Flavor: Google"
