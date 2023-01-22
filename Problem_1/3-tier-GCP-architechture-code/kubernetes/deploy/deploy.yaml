@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: front-deploy
+spec:
+  selector:
+    matchLabels:
+        project: front
+        application: deploy
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        project: front
+        application: deploy
+    spec:
+      containers:
+      - name: front-deploy
+        image: gcr.io/$project_name/front-deploy:v1
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            cpu: 50m
+            memory: 0.5Gi
+            ephemeral-storage:  0.5Gi
+          requests:
+            cpu: 50m
+            memory: 0.5Gi
+            ephemeral-storage:  0.5Gi

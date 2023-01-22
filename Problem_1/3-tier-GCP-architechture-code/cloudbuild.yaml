@@ -1,0 +1,39 @@
+steps:
+#First Clone from Google Cloud Source Repository  
+- name: 'gcr.io/cloud-builders/git'
+  args: ['clone','https://source.developers.google.com/p/${_PROJECT}/r/${_REPO_NAME}']
+
+#Build the image for web
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build','-t','gcr.io/${_PROJECT}/front-end','.']
+
+#Push the image web to GCR
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push','gcr.io/${_PROJECT}/front-end']
+
+#Update the container image using kubectl set for web
+- name: 'gcr.io/cloud-builders/kubectl'
+  args:
+  - 'set'
+  - 'image'
+  - 'deployment/front-deploy'
+  - 'front-deploy=gcr.io/${_PROJECT}/front-end'
+  env:
+  - CLOUDSDK_COMPUTE_REGION=$_CUSTOM_REGION
+  - CLOUDSDK_CONTAINER_CLUSTER=$_CUSTOM_CLUSTER
+
+substitutions:
+#GCP Specific configuration. Please DON'T change anything
+    _PROJECT: $project
+    _CUSTOM_REGION: us-central1
+    _CUSTOM_CLUSTER: front-end-cluster
+    
+#Repository Specific configuration. DevOps can change this settings
+    _REPO_NAME: $bitbucket_repository
+    
+#Developers ONLY change
+    _VERSION: $version_accordingly
+    
+options:
+    substitution_option: 'ALLOW_LOOSE'
+timeout: 1888s
