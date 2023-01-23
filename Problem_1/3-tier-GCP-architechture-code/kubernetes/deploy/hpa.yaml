@@ -1,0 +1,15 @@
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: front-deploy
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: front-deploy
+#desire minimum replicas
+  minReplicas: 2
+#desire maximum replicas
+  maxReplicas: 4
+#desire cpu threshold value in %
+  targetCPUUtilizationPercentage: 60
