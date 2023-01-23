@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-windows
+spec:
+  selector:
+    matchLabels:
+        project: node
+        application: windows
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        project: node
+        application: windows
+    spec:
+      containers:
+      - name: node-windows
+        image: gcr.io/$project/node-windows:v1
+        env:
+          - name: PLATFORM
+            value: windows
+          - name: ENVIRONMENT
+            value: dev
+        ports:
+        - containerPort: 9091
+        - containerPort: 9073
+        resources:
+            limits:
+              cpu: 750m
+              memory: 4Gi
+            requests:
+              cpu: 750m
+              memory: 4Gi
+      tolerations:
+      - key: "node.kubernetes.io/os"
+        operator: "Equal"
+        value: "windows"
+        effect: "NoSchedule"
+      nodeSelector:
+        deploy: windows
